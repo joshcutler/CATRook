@@ -1,0 +1,25 @@
+EPV                     Expected Posterior Variance (EPV)
+Ii                      Item information functions, first and second
+                        derivatives (4PL)
+MEI                     (Maximum) Expected Information (MEI)
+MWI                     Maximum likelihood weighted information (MLWI)
+                        and maximum posterior weighted information
+                        (MPWI)
+OIi                     Observed information function (4PL)
+Pi                      Item response probabilities, first, second and
+                        third derivatives (4PL)
+createItemBank          Item bank generation
+eapEst                  EAP ability estimation under the 4PL model
+eapSem                  Standard error of EAP ability estimation under
+                        the 4PL model
+nextItem                Selection of the next item
+randomCAT               Random generation of adaptive tests
+semTheta                Standard error of ability estimation under the
+                        4PL model
+startItems              Selection of the first items
+tcals                   Items parameters of the TCALS 1998 data set and
+                        subgroups of items
+test.cbList             Testing the format of the list for content
+                        balancing
+testList                Testing the format of the input lists
+thetaEst                Ability estimation under the 4PL model

@@ -1,0 +1,238 @@
+        **************************************************
+        *                                                *
+        *  Changes and Developments in the catR Package  *
+        *                                                *
+        **************************************************
+
+
+------------------------------------
+- Changes in catR 2.1 (2011-12-05) -
+------------------------------------
+
+MINOR UPDATES
+
+  o  It is now possible to save the output of 'randomCAT' into
+     a text file, by specifying the new arguments 'save.output'
+     and 'output' properly. Similarly, the plots obtained with
+     the 'plot.cat' function can be saved as PDF or JPEG files
+     by specifying properly the new arguments 'save.plot' and 
+     'save.options'. See the corresponding help files for 
+     further details.
+
+  o  Some typos have been fixed in the help files.
+
+
+------------------------------------
+- Changes in catR 2.0 (2011-10-21) -
+------------------------------------
+
+MAJOR UPDATES
+
+  o  Several distributions are now available for item
+     parameter generation of the 'createItemBank' function.
+     Possible distributions are: normal and uniform for item
+     difficulties; normal, lognormal and uniform
+     distributions for item discriminations; uniform and 
+     Beta for both item lower and upper asymptotes.
+
+  o  Item exposure control is now feasible with the so-called
+     'randomesque' approach (Kingsbury and Zara, 1989). The 
+     function 'nextItem' and 'randomCAT' hold now the
+     'randomesque' argument that sets the number of optimal
+     items to be selected first, among those the next
+     administered item will be randomly chosen.
+
+  o  Content balancing can now be controlled by specifying
+     subgroups of items in the 'createItemBank' function. The
+     subgroups are coded into a fifth column (after item 
+     parameters) and they are stored in the item bank by
+     setting the new argument 'cb' (for "content balancing")
+     to TRUE. If this fifth column is missing, or if 'cb' is
+     set to FALSE (default), nothing changes from the previous
+     version of catR. See also functions 'nextItem' and 
+     'randomCAT', which were modified for content balancing,
+     as well as the new function 'test.cbList' for testing
+     the format of the 'cbControl' list of 'nextItem'.
+
+  o  Item parameters can now be provided as data frames in 
+     the 'createItemBank' function. This also permits to 
+     include subgroups of items easily.
+
+  o  As a consequence of the previous major update, many help
+     files were updated for comptability with the new function
+     'createItemBank' (i.e. 'tcals' is no longer needed to be
+     converted into a matrix).
+
+  o  The 'tcals' data set was updated by adding a fifth
+     column, holding the subgroups of items as defined by the
+     test. See the help file of 'tcals' for further details.
+
+  o  As a consequence of the previous major update, many help
+     files were updated for compatibility of the new 'tcals'
+     data set (i.e. all examples requiring the matrix of
+     item parameters were slightly modified to remove the
+     'Group' variable).
+
+  o  The 'print.cat' function was updated to display output
+     results of randomesque method for item expoisure control
+     as well as for content balancing (whenever required).
+
+
+MINOR UPDATES
+
+  o  When the 'maxItems' criterion of 'randomCAT' is smaller
+     than the 'stop$thr' argument, an error message is 
+     returned. Previously it contained a mistake, claiming
+     that 'maxItems' is larger than 'stop$thr'. This has 
+     been fixed.
+
+  o  Some typos have been fixed in the help file of 'tcals'
+     data set and 'nextItem' functin.
+
+
+------------------------------------
+- Changes in catR 1.6 (2011-04-11) -
+------------------------------------
+
+MINOR UPDATES
+
+  o  The 'Pi' functin has been slightly modified to avoid
+     a technical bug: when probabilities Pi equal exactly
+     zero or one, the ability estimates cannot be obtained
+     with 'thetaEst' (the boundary conditions cannot be
+     tested because of NaN values). Many thanks to Pan Tong
+     (University of Texas MD Anderson Cancer Center, USA)
+     who noticed this problem.
+
+
+------------------------------------
+- Changes in catR 1.5 (2010-10-28) -
+------------------------------------
+
+MINOR UPDATES
+
+  o  The help files of the 'thetaEst' and 'semTheta' methods
+     have been updated as some information about the EAP
+     estimation method was missing.
+
+
+------------------------------------
+- Changes in catR 1.4 (2010-10-17) -
+------------------------------------
+
+MINOR UPDATES
+
+  o  The method referred to Owen's rule for selecting items
+     in the starting step and in the adaptative process, was
+     renamed Urry's rule given that this simple method was
+     suggested first by Urry (1970) and that Owen's Bayes
+     procedure differs from this one. 
+    
+  o  Consequently to the point above, 'Owen' optional value
+     of the 'itemSelect' argument of the 'test' list was 
+     replaced by 'Urry'. 
+
+  o  In addition, the 'nextItem', 'testList', randomCAT' and
+     'print.cat' have been updated by the replacement of
+     'Owen' by 'Urry'. 
+ 
+  o  A minor problem was fixed in the code of the 'randomCAT' 
+     function: the output list was not returning all the
+     required elements (in particular, the value of the
+     'itemSelect' argument).
+
+  o  A minor issue was fixed in the 'print.cat' function: the
+     output was not displayed correctly when only two items
+     are selected at the initial step.
+
+
+------------------------------------
+- Changes in catR 1.3 (2010-10-08) -
+------------------------------------
+
+MINOR UPDATES
+
+  o  Several typos have been fixed.
+
+  o  The 'randomCAT' help file has been updated as some
+     information was incorrect or incomplete.
+
+
+------------------------------------
+- Changes in catR 1.2 (2010-09-07) -
+------------------------------------
+
+MAJOR UPDATES
+
+  o  Several procedures for next item selection have been
+     added. First, Maximum Likelihood Weighted Information
+     (MLWI) and Maximum Posterior Weighted Information (MPWI)
+     are now available. The command 'MWI' has been developed
+     for that purpose.
+
+  o  Second, Maximum Expected Information (MEI) has been
+     implemented for next item selection. The function 'MEI'
+     was developed for computing MEI values.
+
+  o  The MEI criterion required the creation of the 'OIi'
+     command for computing observed information function. 
+
+  o  The Maximum Expected Posterior Variance (MEPV) is also
+     available. The command 'EPV' computes expected posterior
+     variances and is used within the 'nextItem' function.
+
+  o  Finally, the completely random selection of the next 
+     item is also possible right now.
+
+  o  The functions 'eapEst' and 'eapSem' have been modified
+     to speed up their computation. The approximation of the
+     integrals is now made by the 'integrate.xy' function 
+     from the package 'sfsmisc'.
+
+  o  The function 'startItems' has been modified. First, the
+     argument 'bw' has been replaced by 'halfRange' and codes
+     now for the half range of the sequence and not the full
+     range (this was misleading). Second, the items can be
+     selected either according to their difficulty level or
+     their information function. This is specified by the
+     'startSelect' argument.
+
+  o  Consequently, the functions 'nextItem', 'testList', 
+     'randomCAT' and 'print.cat' have been updated.
+
+
+MINOR UPDATES
+
+  o  The argument 'eapPar' from functions 'eapEst' and 'eapSem'
+     has been renamed to 'parInt' for consistency with the 
+     'MWI' and 'nextItem' functions. It better refers to the
+     parameters for numerical integration and not only for the
+     EAP method, but also for MLWI and MPWI computation. 
+
+  o  Several typos have been fixed in the help manual.
+
+  o  The 'plot.cat' function has been modified. Now, the 
+     confidence intervals do not appear by default ('ci=FALSE'
+     in the code). Moreover, confidence intervals are displayed
+     with dotted traits, while the true ability level is drawn
+     with a solid horizontal line. Also, any classification
+     level can be specified and drawn by a dashed horizontal
+     trait.
+
+
+------------------------------------
+- Changes in catR 1.1 (2010-06-15) -
+------------------------------------
+
+MAJOR UPDATES
+
+  o  Owen's procedure has been added as a method for next item
+     selection. 
+
+  o  Consequently, the functions 'nextItem', 'testList', 
+     'randomCAT' and 'print.cat' have been updated.
+
+
+MINOR UPDATES
+
+  o  Several typos have been fixed in the help manual.
