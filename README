@@ -1,0 +1,8 @@
+Todo:
+ - create R package
+ 
+ ./installR.sh
+ R -q -e "install.packages('Rook', repos='http://cran.r-project.org')"
+ #Other packages
+ 
+ see here: https://github.com/noahhl/rookonheroku
