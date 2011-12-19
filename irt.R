@@ -73,8 +73,6 @@ rook$add(
   }
 )
 
-rook$remove(1)
-
 rook$start(listen='0.0.0.0', port=as.numeric(Sys.getenv("PORT")))
 
 while(T) {
