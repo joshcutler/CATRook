@@ -16,14 +16,14 @@ rook$add(
     guessing = as.numeric(unlist(strsplit(req$params()$g, ",")))
     ids = unlist(strsplit(req$params()$ids, ","))
     inattention = c(1)
- 
-    questions = data.frame(a=discrimination, b=difficulty, c=guessing, d=inattention)
-    items = createItemBank(items=questions)
- 
+    questions = data.frame(a=discrimination, b=difficulty, c=guessing, d=inattention, ids=ids)
+
     #Figure out which questions have been answered
     answers = as.numeric(unlist(strsplit(req$params()$a, ",")))
+    unasked_questions = as.logical(as.numeric(unlist(strsplit(req$params()$uaq, ","))))
+    #If an answer was NA it was not administered or they skipped it and we can't use it for computing theta
     answered_questions = !is.na(answers)
-    
+
     #Either take \hat{\theta} as a param or compute it
     if("th" %in% names(req$params()))
     {
@@ -35,8 +35,13 @@ rook$add(
     }
 
     #Compute the next item and return it
+    items = createItemBank(items=questions[unasked_questions,])
     next_item = nextItem(items, theta_hat, criterion="MEPV")
-    
+
+    #Convert item response to proper "ID"
+    next_id = questions[unasked_questions, "ids"][as.numeric(next_item["item"])]
+    next_item["item"] = next_id
+
     res = Rook::Response$new()
     res$write(toJSON(next_item))
     res$finish()
