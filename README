@@ -9,8 +9,10 @@ params:
   a   - An array of question answers, should be 0, 1, or NA.  Where 1 is a correct answer
   uaq - An array of unasked questions, should be 0, 1 where 1 signifies that the question has not yet been asked
   th  - (optional) The current value of theta hat.  Optional but makes web service calls faster
-
+  
+  #Not implemented yet
+  ro  - (optional) An array with the number of response options for this question (used for polytonomous questions)
+  rt  - 'dich' or 'poly' depending on whether the questions are dichotomous or not 
+  
 Todo:
  - create R package
- 
- see here: https://github.com/noahhl/rookonheroku
