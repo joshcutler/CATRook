@@ -3,6 +3,7 @@ require('Rook')
 library(Rook)
 library(rjson)
 library(catR)
+library(ltm)
 
 rook = Rhttpd$new()
 rook$add(
