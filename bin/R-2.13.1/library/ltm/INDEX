@@ -1,0 +1,43 @@
+Abortion                Attitude Towards Abortion
+Environment             Attitude to the Environment
+GoF.gpcm                Goodness of Fit for Rasch Models
+LSAT                    The Law School Admission Test (LSAT), Section
+                        VI
+Mobility                Women's Mobility
+Science                 Attitude to Science and Technology
+WIRS                    Workplace Industrial Relation Survey Data
+anova.gpcm              Anova method for fitted IRT models
+biserial.cor            Point-Biserial Correlation
+coef.gpcm               Extract Estimated Loadings
+cronbach.alpha          Cronbach's alpha
+descript                Descriptive Statistics
+factor.scores           Factor Scores - Ability Estimates
+fitted.gpcm             Fitted Values for IRT model
+gh                      Gauss-Hermite Quadrature Points
+gpcm                    Generalized Partial Credit Model - Polytomous
+                        IRT
+grm                     Graded Response Model - Polytomous IRT
+information             Area under the Test or Item Information Curves
+item.fit                Item-Fit Statistics and P-values
+ltm                     Latent Trait Model - Latent Variable Model for
+                        Binary Data
+ltm-package             Latent Trait Models for Item Response Theory
+                        Analyses
+margins                 Fit of the model on the margins
+mult.choice             Multiple Choice Items to Binary Responses
+person.fit              Person-Fit Statistics and P-values
+plot.descript           Descriptive Statistics Plot method
+plot.fscores            Factor Scores - Ability Estimates Plot method
+plot.gpcm               Plot method for fitted IRT models
+rasch                   Rasch Model
+rcor.test               Pairwise Associations between Items using a
+                        Correlation Coefficient
+residuals.gpcm          Residuals for IRT models
+rmvlogis                Generate Random Responses Patterns under
+                        Dichotomous and Polytomous IRT models
+summary.gpcm            Summary method for fitted IRT models
+testEquatingData        Prepares Data for Test Equating
+tpm                     Birnbaum's Three Parameter Model
+unidimTest              Unidimensionality Check using Modified Parallel
+                        Analysis
+vcov.gpcm               vcov method for fitted IRT models
