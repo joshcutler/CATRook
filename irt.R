@@ -92,6 +92,35 @@ rook$add(
   }
 )
 
+#Test Function
+rook$add(
+  name ="load_grm",
+  app  = function(env) {
+    req = Rook::Request$new(env)
+    
+    source(textConnection(req$params()$fit))
+    
+    res = Rook::Response$new()
+    res$write(fit)
+    res$finish()
+  }
+)
+
+rook$add(
+  name ="fit_grm",
+  app  = function(env) {
+    req = Rook::Request$new(env)
+    
+    fit = grm(req$params()$data)
+    dump(c('fit'), "test.R")
+    lines = readLines("test.R")
+    
+    res = Rook::Response$new()
+    res$write(lines)
+    res$finish()
+  }
+)
+
 rook$start(listen='0.0.0.0', port=as.numeric(Sys.getenv("PORT")))
 
 while(T) {
