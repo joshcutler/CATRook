@@ -60,7 +60,7 @@ rook$add(
       next_item_index = next_item["item"]$item
       next_item["item"] = next_id
       
-      #Compute some results to savea  web service call
+      #Compute some results to save a web service call
       question_index = as.numeric(rownames(questions[questions$ids == as.character(next_id),]))
       hyp_answered_questions = answered_questions
       hyp_answered_questions[question_index] = T
@@ -111,10 +111,24 @@ rook$add(
   app  = function(env) {
     req = Rook::Request$new(env)
     
-    fit = grm(req$params()$data)
+    for (col in names(req$params())) {
+      values = unlist(strsplit(req$params()[[col]], ","))
+      
+      if (!exists("data")) {
+        data = data.frame(values)
+      }
+      else {
+        data = cbind(data, values)
+      }
+      
+      names(data)[[ncol(data)]] = col
+      data$names = NULL
+    }
+    
+    fit = grm(data)
     dump(c('fit'), "test.R")
     lines = readLines("test.R")
-    
+     
     res = Rook::Response$new()
     res$write(lines)
     res$finish()
