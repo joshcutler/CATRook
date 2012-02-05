@@ -5,6 +5,8 @@ library(rjson)
 library(catR)
 library(ltm)
 
+source("poly.R")
+
 rook = Rhttpd$new()
 rook$add(
   name ="next_question",
@@ -36,9 +38,29 @@ rook$add(
     answered_questions = !is.na(answers)
     
     #Either take \hat{\theta} as a param or compute it    
+    results = list()
+ 
     if (poly)
     {
+      #Get the fitted model from the passed parameters
+      source(textConnection(req$params()$fit))
       
+      #Get the list of question indices to consider
+      #TODO: Refactor this (possibly just use uaq as is and refactor next.item.grm)
+      remaining_indices = c()
+      for (i in 1:length(unasked_questions)) {
+        if (unasked_questions[i]) {
+          reamaining_indices = append(remaining_indices, i)
+        }
+      }
+      next_item = next.item.grm(my.fit=fit, so.far=answers, resp.options=ro, remaining.items=remaining_indices)
+      
+      theta_hat = next_item$theta.est
+      results$next_item = list()
+      #Convert item response to proper "ID"
+      next_id = questions[as.numeric(next_item["item"]),"ids"]
+ 
+      results$next_item$item_id = next_id
     }
     else
     {
@@ -73,18 +95,17 @@ rook$add(
       #Compute values if item is incorrect
       hyp_answers[question_index] = 0
       hyp_theta_hat_incorrect = thetaEst(questions[hyp_answered_questions,], hyp_answers[hyp_answered_questions], method="EAP")
+    
+      results$theta_hat = theta_hat
+
+      results$next_item = list()
+      results$next_item$item_id = next_item$item
+      results$next_item$EPV = next_item$info
+      results$next_item$criterion = next_item$criterion
+
+      results$if_correct = list(theta_hat=hyp_theta_hat_correct)
+      results$if_incorrect = list(theta_hat=hyp_theta_hat_incorrect)
     }
-
-    results = list()
-    results$theta_hat = theta_hat
-
-    results$next_item = list()
-    results$next_item$item_id = next_item$item
-    results$next_item$EPV = next_item$info
-    results$next_item$criterion = next_item$criterion
-
-    results$if_correct = list(theta_hat=hyp_theta_hat_correct)
-    results$if_incorrect = list(theta_hat=hyp_theta_hat_incorrect)
     
     res = Rook::Response$new()
     res$write(toJSON(results))
@@ -112,20 +133,21 @@ rook$add(
     req = Rook::Request$new(env)
     
     for (col in names(req$params())) {
-      values = unlist(strsplit(req$params()[[col]], ","))
+      values = as.double(unlist(strsplit(req$params()[[col]], ",")))
       
-      if (!exists("data")) {
-        data = data.frame(values)
+      if (!exists("dataf")) {
+        dataf = data.frame(values)
       }
       else {
-        data = cbind(data, values)
+        dataf = cbind(dataf, values)
       }
       
-      names(data)[[ncol(data)]] = col
-      data$names = NULL
+      names(dataf)[[ncol(dataf)]] = col
     }
     
-    fit = grm(data)
+    cleaned = dataf[complete.cases(dataf),]
+    print(cleaned)
+    fit = grm(cleaned)
     dump(c('fit'), "test.R")
     lines = readLines("test.R")
      
