@@ -99,7 +99,7 @@ rook$add(
       results$theta_hat = theta_hat
 
       results$next_item = list()
-      results$next_item$item_id = next_item$item
+      results$next_item$item_id = next_id
       results$next_item$EPV = next_item$info
       results$next_item$criterion = next_item$criterion
 
