@@ -72,8 +72,6 @@ rook$add(
       {
         theta_hat = thetaEst(questions[answered_questions,], answers[answered_questions], method="EAP")
       }
-      #Flip the sign of the discrimination parameters since we are storing ltm
-      questions$a = questions$a*-1
       
       #Compute the next item and return it
       items = createItemBank(items=questions)
