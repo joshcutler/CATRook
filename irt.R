@@ -64,20 +64,22 @@ rook$add(
     }
     else
     {
+      ourPrior = c(0, 2)
       if("th" %in% names(req$params()))
       {
         theta_hat = as.numeric(req$params()$th)
       }
       else
       {
-        theta_hat = thetaEst(questions[answered_questions,], answers[answered_questions], method="EAP")
+        theta_hat = thetaEst(questions[answered_questions,], answers[answered_questions], method="EAP", priorPar=ourPrior)
       }
       #Flip the sign of the discrimination parameters since we are storing ltm
       questions$a = questions$a*-1
       
       #Compute the next item and return it
       items = createItemBank(items=questions)
-      next_item = nextItem(items, theta_hat, criterion="MEPV", out=as.numeric(rownames(questions[!unasked_questions,])))
+      
+      next_item = nextItem(items, theta_hat, criterion="MEPV", out=as.numeric(rownames(questions[!unasked_questions,])), priorPar=ourPrior)
     
       #Convert item response to proper "ID"
       next_id = questions[as.numeric(next_item["item"]),"ids"]
@@ -92,11 +94,11 @@ rook$add(
       
       #Compute values if item is correct
       hyp_answers[question_index] = 1
-      hyp_theta_hat_correct = thetaEst(questions[hyp_answered_questions,], hyp_answers[hyp_answered_questions], method="EAP")
+      hyp_theta_hat_correct = thetaEst(questions[hyp_answered_questions,], hyp_answers[hyp_answered_questions], method="EAP", priorPar=ourPrior)
     
       #Compute values if item is incorrect
       hyp_answers[question_index] = 0
-      hyp_theta_hat_incorrect = thetaEst(questions[hyp_answered_questions,], hyp_answers[hyp_answered_questions], method="EAP")
+      hyp_theta_hat_incorrect = thetaEst(questions[hyp_answered_questions,], hyp_answers[hyp_answered_questions], method="EAP", priorPar=ourPrior)
     
       results$theta_hat = theta_hat
 
