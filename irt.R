@@ -78,7 +78,7 @@ rook$add(
       #Compute the next item and return it
       items = createItemBank(items=questions)
       
-      next_item = nextItem(items, theta_hat, criterion="MEPV", out=as.numeric(rownames(questions[!unasked_questions,])), priorPar=ourPriorD=1.7,  parInt=c(-13,13,70))
+      next_item = nextItem(items, theta_hat, criterion="MEPV", out=as.numeric(rownames(questions[!unasked_questions,])), priorPar=ourPrior, D=1.7,  parInt=c(-13,13,70))
     
       #Convert item response to proper "ID"
       next_id = questions[as.numeric(next_item["item"]),"ids"]
