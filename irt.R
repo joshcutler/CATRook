@@ -53,7 +53,8 @@ rook$add(
           reamaining_indices = append(remaining_indices, i)
         }
       }
-      next_item = next.item.grm(my.fit=fit, so.far=answers, resp.options=ro, remaining.items=remaining_indices)
+      next_item = next.item.grm(my.fit=fit, so.far=answers, resp.options=ro, remaining.items=remaining_indices, D=1.7, 
+                                parInt=c(-13,13,70))
       
       theta_hat = next_item$theta.est
       results$next_item = list()
@@ -64,20 +65,20 @@ rook$add(
     }
     else
     {
-      ourPrior = c(0, 2)
+      ourPrior = c(0, 1.75)
       if("th" %in% names(req$params()))
       {
         theta_hat = as.numeric(req$params()$th)
       }
       else
       {
-        theta_hat = thetaEst(questions[answered_questions,], answers[answered_questions], method="EAP", priorPar=ourPrior)
+        theta_hat = thetaEst(questions[answered_questions,], answers[answered_questions], method="EAP", priorPar=ourPrior, D=1.7,  parInt=c(-13,13,70))
       }
       
       #Compute the next item and return it
       items = createItemBank(items=questions)
       
-      next_item = nextItem(items, theta_hat, criterion="MEPV", out=as.numeric(rownames(questions[!unasked_questions,])), priorPar=ourPrior)
+      next_item = nextItem(items, theta_hat, criterion="MEPV", out=as.numeric(rownames(questions[!unasked_questions,])), priorPar=ourPriorD=1.7,  parInt=c(-13,13,70))
     
       #Convert item response to proper "ID"
       next_id = questions[as.numeric(next_item["item"]),"ids"]
@@ -92,11 +93,12 @@ rook$add(
       
       #Compute values if item is correct
       hyp_answers[question_index] = 1
-      hyp_theta_hat_correct = thetaEst(questions[hyp_answered_questions,], hyp_answers[hyp_answered_questions], method="EAP", priorPar=ourPrior)
+      hyp_theta_hat_correct = thetaEst(questions[hyp_answered_questions,], hyp_answers[hyp_answered_questions], 
+                                       method="EAP", priorPar=ourPrior, D=1.7,  parInt=c(-13,13,70))
     
       #Compute values if item is incorrect
       hyp_answers[question_index] = 0
-      hyp_theta_hat_incorrect = thetaEst(questions[hyp_answered_questions,], hyp_answers[hyp_answered_questions], method="EAP", priorPar=ourPrior)
+      hyp_theta_hat_incorrect = thetaEst(questions[hyp_answered_questions,], hyp_answers[hyp_answered_questions], method="EAP", priorPar=ourPrior, D=1.7,  parInt=c(-13,13,70))
     
       results$theta_hat = theta_hat
 
