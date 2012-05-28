@@ -67,6 +67,9 @@ rook$add(
     {
       ourPrior = c(0, 1.75)
       
+      #Convert all skips/timeouts to wrong answers
+      answers[is.na(answers) & !unasked_questions] = 0
+      
       #Compute the next item and return it
       items = data.frame(difficulty=difficulty, discrimination=discrimination, guessing=guessing, answers=answers)
       cat = new("CATsurv", questions=items, priorParams=ourPrior)
