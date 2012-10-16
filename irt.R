@@ -5,7 +5,6 @@ library(rjson)
 library(ltm)
 
 source('CATSurv.R')
-#source("poly.R")
 
 rook = Rhttpd$new()
 rook$add(
@@ -34,6 +33,7 @@ rook$add(
     #Figure out which questions have been answered
     answers = as.numeric(unlist(strsplit(req$params()$a, ",")))
     unasked_questions = as.logical(as.numeric(unlist(strsplit(req$params()$uaq, ","))))
+    
     #If an answer was NA it was not administered or they skipped it and we can't use it for computing theta
     answered_questions = !is.na(answers)
     
@@ -65,14 +65,28 @@ rook$add(
     }
     else
     {
-      ourPrior = c(0, 1.75)
+      print("Dichotomous")
+      ourPrior = req$params()$prior
+      if (is.null(prior)) {
+        ourPrior = "normal"
+      }
+      
+      ourPriorParams = req$params()$priorParams
+      if (is.null(ourPriorParams)) {
+        ourPriorParams = c(0, 1.75)
+        if (ourPrior == "cauchy") {
+          # Cauchy spazzes at 0
+          ourPriorParams = c(0.01, 1.75)
+        }  
+      }
       
       #Convert all skips/timeouts to wrong answers
       answers[is.na(answers) & !unasked_questions] = 0
       
       #Compute the next item and return it
       items = data.frame(difficulty=difficulty, discrimination=discrimination, guessing=guessing, answers=answers)
-      cat = new("CATsurv", questions=items, priorParams=ourPrior)
+      cat = new("CATsurv", questions=items, priorName=ourPrior, priorParams=ourPriorParams)
+      print("CAT created.")
       
       if("th" %in% names(req$params()))
       {
@@ -82,8 +96,10 @@ rook$add(
       {
         theta_hat = estimateTheta(cat)
       }
+      print(paste("Theta: ", theta_hat))
       
       next_item = nextItem(cat, theta_hat, D=1.7)
+      print(paste("Next Item: ", next_item))
       
       #Convert item response to proper "ID"
       next_id = questions[as.numeric(next_item["next.item"]),"ids"]
@@ -102,6 +118,9 @@ rook$add(
     res$finish()
   }
 )
+
+rook$browse("next_question")
+rook$remove("next_question")
 
 #Test Function
 rook$add(

@@ -8,7 +8,7 @@ setClass(class.name,
            priorParams="numeric"
            ),
          prototype=prototype(
-           priorName="norm",
+           priorName="normal",
            priorParams=c(1,1)
            )
          )
@@ -48,31 +48,38 @@ setMethod(f="likelihood", signature=class.name, definition=function(cat, theta, 
 setGeneric("prior", function(cat, values, name, params){standardGeneric("prior")})
 setMethod(f="prior", signature=class.name, definition=function(cat, values, name, params) {
   prior.value = switch(name, 
-                       norm = dnorm(values, params[1], params[2])
+                       normal = dnorm(values, params[1], params[2]),
+                       cauchy = dcauchy(values, params[1], params[2]),
+                       t = dt(values, params[1])
                        )
+  return(prior.value)
 })
 
-setGeneric("estimateTheta", function(cat, D=1, lowerBound=-4, upperBound=4, quadPoints=33, ...){standardGeneric("estimateTheta")})
-setMethod(f="estimateTheta", signature=class.name, definition=function(cat, D=1, lowerBound=-4, upperBound=4, quadPoints=33, ...) {
+setGeneric("estimateTheta", function(cat, D=1, priorName=NULL, priorParams=NULL, lowerBound=-4, upperBound=4, quadPoints=33, ...){standardGeneric("estimateTheta")})
+setMethod(f="estimateTheta", signature=class.name, definition=function(cat, D=1, priorName=NULL, priorParams=NULL, lowerBound=-4, upperBound=4, quadPoints=33, ...) {
   X = seq(from=lowerBound, to=upperBound, length=quadPoints)
   applicable_rows = cat@questions[!is.na(cat@questions$answers), ]
   
-  prior.values = prior(cat, X, cat@priorName, cat@priorParams)
+  priorName = if (!is.null(priorName)) priorName else cat@priorName
+  priorParams = if (!is.null(priorParams)) priorParams else cat@priorParams
+  prior.values = prior(cat, X, priorName, priorParams)
   likelihood.values = rep(NA, times=length(X))
   for (i in 1:length(likelihood.values)) {
     likelihood.values[i] = likelihood(cat, X[i], applicable_rows, D)
-  }
+  }  
   
   results = integrate.xy(X, X*likelihood.values*prior.values) / integrate.xy(X, likelihood.values*prior.values)
   return(results)
 })
 
-setGeneric("estimateSE", function(cat, theta.hat, D=1, lowerBound=-4, upperBound=4, quadPoints=33, ...){standardGeneric("estimateSE")})
-setMethod(f="estimateSE", signature=class.name, definition=function(cat, theta.hat, D=1, lowerBound=-4, upperBound=4, quadPoints=33, ...) {
+setGeneric("estimateSE", function(cat, theta.hat, D=1, priorName=NULL, priorParams=NULL, lowerBound=-4, upperBound=4, quadPoints=33, ...){standardGeneric("estimateSE")})
+setMethod(f="estimateSE", signature=class.name, definition=function(cat, theta.hat, D=1, priorName=NULL, priorParams=NULL, lowerBound=-4, upperBound=4, quadPoints=33, ...) {
   X = seq(from=lowerBound, to=upperBound, length=quadPoints)
   applicable_rows = cat@questions[!is.na(cat@questions$answers), ]
   
-  prior.values = prior(cat, X, cat@priorName, cat@priorParams)
+  priorName = if (!is.null(priorName)) priorName else cat@priorName
+  priorParams = if (!is.null(priorParams)) priorParams else cat@priorParams
+  prior.values = prior(cat, X, priorName, priorParams)
   likelihood.values = rep(NA, times=length(X))
   for (i in 1:length(likelihood.values)) {
     likelihood.values[i] = likelihood(cat, X[i], applicable_rows, D)
