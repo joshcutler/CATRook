@@ -42,34 +42,36 @@ rook$add(
  
     if (poly)
     {
+      print("Poly")
       #Get the fitted model from the passed parameters
-      source(textConnection(req$params()$fit))
+      #source(textConnection(req$params()$fit))
       
       #Get the list of question indices to consider
       #TODO: Refactor this (possibly just use uaq as is and refactor next.item.grm)
-      remaining_indices = c()
-      for (i in 1:length(unasked_questions)) {
-        if (unasked_questions[i]) {
-          reamaining_indices = append(remaining_indices, i)
-        }
-      }
-      next_item = next.item.grm(my.fit=fit, so.far=answers, resp.options=ro, remaining.items=remaining_indices, D=1.7, 
-                                parInt=c(-13,13,70))
+      #remaining_indices = c()
+      #for (i in 1:length(unasked_questions)) {
+      #  if (unasked_questions[i]) {
+      #    reamaining_indices = append(remaining_indices, i)
+      #  }
+      #}
+      #next_item = next.item.grm(my.fit=fit, so.far=answers, resp.options=ro, remaining.items=remaining_indices, D=1.7, 
+      #                          parInt=c(-13,13,70))
       
-      theta_hat = next_item$theta.est
-      results$next_item = list()
+      #theta_hat = next_item$theta.est
+      #results$next_item = list()
       #Convert item response to proper "ID"
-      next_id = questions[as.numeric(next_item["item"]),"ids"]
+      #next_id = questions[as.numeric(next_item["item"]),"ids"]
  
-      results$next_item$item_id = next_id
+      #results$next_item$item_id = next_id
     }
     else
     {
       print("Dichotomous")
       ourPrior = req$params()$prior
-      if (is.null(prior)) {
+      if (is.null(ourPrior)) {
         ourPrior = "normal"
       }
+      print(paste("Prior: ", ourPrior))
       
       ourPriorParams = req$params()$priorParams
       if (is.null(ourPriorParams)) {
@@ -78,7 +80,10 @@ rook$add(
           # Cauchy spazzes at 0
           ourPriorParams = c(0.01, 1.75)
         }  
+      } else {
+        ourPriorParams = c(as.numeric(req$params()$priorParams), 1.75)
       }
+      print(paste("Prior Params: ", ourPriorParams))
       
       #Convert all skips/timeouts to wrong answers
       answers[is.na(answers) & !unasked_questions] = 0
@@ -97,20 +102,23 @@ rook$add(
         theta_hat = estimateTheta(cat)
       }
       print(paste("Theta: ", theta_hat))
-      
-      next_item = nextItem(cat, theta_hat, D=1.7)
-      print(paste("Next Item: ", next_item))
-      
-      #Convert item response to proper "ID"
-      next_id = questions[as.numeric(next_item["next.item"]),"ids"]
-      next_item["item"] = next_id
-      
       results$theta_hat = theta_hat
-
-      results$next_item = list()
-      results$next_item$item_id = next_id
-      results$next_item$EPV = next_item$info
-      results$next_item$criterion = next_item$criterion
+      
+      if (sum(unasked_questions) > 0) {
+        print(paste("Unasked Questions: ", sum(unasked_questions)))
+        next_item = nextItem(cat, theta_hat, D=1.7)
+        print(paste("Next Item: ", next_item))
+        
+        #Convert item response to proper "ID"
+        next_id = questions[as.numeric(next_item["next.item"]),"ids"]
+        next_item["item"] = next_id
+        
+        results$next_item = list()
+        results$next_item$item_id = next_id
+        results$next_item$EPV = next_item$info
+        results$next_item$criterion = next_item$criterion
+      }
+      print("Done.")
     }
     
     res = Rook::Response$new()
