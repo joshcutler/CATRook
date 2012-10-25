@@ -127,9 +127,6 @@ rook$add(
   }
 )
 
-rook$browse("next_question")
-rook$remove("next_question")
-
 #Test Function
 rook$add(
   name ="load_grm",
