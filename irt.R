@@ -42,31 +42,11 @@ rook$add(
  
     if (poly)
     {
-      print("Poly")
-      #Get the fitted model from the passed parameters
-      #source(textConnection(req$params()$fit))
-      
-      #Get the list of question indices to consider
-      #TODO: Refactor this (possibly just use uaq as is and refactor next.item.grm)
-      #remaining_indices = c()
-      #for (i in 1:length(unasked_questions)) {
-      #  if (unasked_questions[i]) {
-      #    reamaining_indices = append(remaining_indices, i)
-      #  }
-      #}
-      #next_item = next.item.grm(my.fit=fit, so.far=answers, resp.options=ro, remaining.items=remaining_indices, D=1.7, 
-      #                          parInt=c(-13,13,70))
-      
-      #theta_hat = next_item$theta.est
-      #results$next_item = list()
-      #Convert item response to proper "ID"
-      #next_id = questions[as.numeric(next_item["item"]),"ids"]
- 
-      #results$next_item$item_id = next_id
+      print("Polytonomous case not yet implemented")
     }
     else
     {
-      print("Dichotomous")
+      print("Dichotomous case")
       ourPrior = req$params()$prior
       if (is.null(ourPrior)) {
         ourPrior = "normal"
@@ -123,50 +103,6 @@ rook$add(
     
     res = Rook::Response$new()
     res$write(toJSON(results))
-    res$finish()
-  }
-)
-
-#Test Function
-rook$add(
-  name ="load_grm",
-  app  = function(env) {
-    req = Rook::Request$new(env)
-    
-    source(textConnection(req$params()$fit))
-    
-    res = Rook::Response$new()
-    res$write(fit)
-    res$finish()
-  }
-)
-
-rook$add(
-  name ="fit_grm",
-  app  = function(env) {
-    req = Rook::Request$new(env)
-    
-    for (col in names(req$params())) {
-      values = as.double(unlist(strsplit(req$params()[[col]], ",")))
-      
-      if (!exists("dataf")) {
-        dataf = data.frame(values)
-      }
-      else {
-        dataf = cbind(dataf, values)
-      }
-      
-      names(dataf)[[ncol(dataf)]] = col
-    }
-    
-    cleaned = dataf[complete.cases(dataf),]
-    print(cleaned)
-    fit = grm(cleaned)
-    dump(c('fit'), "test.R")
-    lines = readLines("test.R")
-     
-    res = Rook::Response$new()
-    res$write(lines)
     res$finish()
   }
 )
