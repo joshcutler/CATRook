@@ -21,7 +21,7 @@ rook$add(
         poly = T  
       }
     }
-    
+    print(req$params())
     #Construct the item bank
     discrimination = as.numeric(unlist(strsplit(req$params()$dis, ",")))
     difficulty = as.numeric(unlist(strsplit(req$params()$dif, ",")))
@@ -61,7 +61,11 @@ rook$add(
           ourPriorParams = c(0.01, 1.75)
         }  
       } else {
-        ourPriorParams = c(as.numeric(req$params()$priorParams), 1.75)
+        priorSE = req$params()$priorParamSE
+        if (is.null(priorSE)) {
+          priorSE = sqrt(1.75)
+        }
+        ourPriorParams = c(as.numeric(req$params()$priorParams), as.numeric(priorSE)^2)
       }
       print(paste("Prior Params: ", ourPriorParams))
       
