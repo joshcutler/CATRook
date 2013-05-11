@@ -66,6 +66,9 @@ rook$add(
           priorSE = sqrt(1.75)
         }
         ourPriorParams = c(as.numeric(req$params()$priorParams), as.numeric(priorSE)^2)
+        if (!is.null(req$params()$priorParamsDF)) {
+          ourPriorParams = c(ourPriorParams, as.numeric(req$params()$priorParamsDF))
+        }
       }
       print(paste("Prior Params: ", ourPriorParams))
       
